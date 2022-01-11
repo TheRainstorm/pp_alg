@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+import os
+import sys
+
+if len(sys.argv)!=3:
+    print("Usage compile mpi|omp xxx.c")
+    exit(0)
+
+file = sys.argv[2]
+exe = file.split('.')[0]
+
+cmd0 = "g++ %s -o %s"%(file, exe)
+cmd1 = "mpicc %s -lm -o %s"%(file, exe)
+cmd2 = "g++ -fopenmp %s -o %s"%(file, exe)
+cmd3 = "g++ -O2 -fopenmp -ftree-loop-vectorize -march=core-avx2 -fopt-info-vec %s -o %s"%(file, exe)
+cmd4 = "mpicc -fopenmp %s -o %s"%(file, exe)
+
+if "mpi" in sys.argv[1]:
+    os.system(cmd1)
+elif "vec" in sys.argv[1]:
+    os.system(cmd3)
+elif "omp" in sys.argv[1]:
+    os.system(cmd2)
+elif "two" in sys.argv[1]:
+    os.system(cmd4)
+else:
+    os.system(cmd0)
